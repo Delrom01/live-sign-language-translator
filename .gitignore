@@ -1,6 +1,5 @@
 .idea/
 Notes
 faces_tracking/__pycache__/
-faces_tracking/__pycache__/faces_tracking_module.cpython-38.pyc
 hands_tracking/__pycache__/
 venv
