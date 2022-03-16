@@ -33,7 +33,7 @@ class HandsDetector:
                     self.mediapipe_Draw.draw_landmarks(camera_image, hand, self.mediapipe_Hands.HAND_CONNECTIONS)           # Déssiner les points de repère (landmarks) de la main avec les connexions entre points
         return camera_image
 
-    def find_position(self, camera_image, hand_number=0, draw_positions=True):
+    def find_position(self, camera_image, hand_number=0, draw_positions=True, landmark_number=None):
         landmarks_list = []                                                                                                 # Liste des points de repères (landmarks) à retourner
         if self.hand_detection_results.multi_hand_landmarks:                                                                # Pour une main en particulier
             hand = self.hand_detection_results.multi_hand_landmarks[hand_number]                                            # Récupérer les informations de la main (points de repères + coordonnées)
@@ -41,6 +41,10 @@ class HandsDetector:
                 longueur, largeur, cannaux = camera_image.shape                                                             # Calculer le ratio / l'échelle de notre image
                 position_x, position_y = int(landmarks.x * largeur), int(landmarks.y * longueur)                            # Trouver une position dans l'écran
                 landmarks_list.append([id, position_x, position_y])                                                         # Ajouter ces coordonées dans la liste
-                if draw_positions:                                                                                          # Marquer cette position à l'écran
-                    cv2.circle(camera_image, (position_x, position_y), 25, (255, 0, 255), cv2.FILLED)                       # Dessiner un cercle en définissant sa position, son rayon et sa couleur (cv2.FILLED = forme pleinne)
+                if draw_positions:                                                                                          # Si on souhaite marquer des positions
+                    if landmark_number:
+                        if id == landmark_number:                                                                           # Si une position particulière a été indiquée, marquer cette position à l'écran
+                            cv2.circle(camera_image, (position_x, position_y), 25, (255, 0, 255), cv2.FILLED)               # Dessiner un cercle en définissant sa position, son rayon et sa couleur (cv2.FILLED = forme pleinne)
+                    else:
+                        cv2.circle(camera_image, (position_x, position_y), 25, (255, 0, 255), cv2.FILLED)                   # Sinon, marquer toutes les positions
         return landmarks_list
