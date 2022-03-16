@@ -35,7 +35,7 @@ class FacesDetector:
                                                        self.mediapipe_Draw_Spec, self.mediapipe_Draw_Spec)
         return camera_image
 
-    def find_position(self, camera_image, face_number=0, draw_positions=True):
+    def find_position(self, camera_image, face_number=0, draw_positions=True, landmark_number=None):
         landmarks_list = []                                                                                                 # Liste des points de repères (landmarks) à retourner
         if self.face_detection_results.multi_face_landmarks:                                                                # Pour un visage en particulier
             face = self.face_detection_results.multi_face_landmarks[face_number]                                            # Récupérer les informations du visage (points de repères + coordonnées)
@@ -43,6 +43,10 @@ class FacesDetector:
                 longueur, largeur, cannaux = camera_image.shape                                                             # Calculer le ratio / l'échelle de notre image
                 position_x, position_y = int(landmarks.x * largeur), int(landmarks.y * longueur)                            # Trouver une position dans l'écran
                 landmarks_list.append([id, position_x, position_y])                                                         # Ajouter ces coordonées dans la liste
-                if draw_positions:                                                                                          # Marquer cette position à l'écran
-                    cv2.circle(camera_image, (position_x, position_y), 25, (255, 0, 255), cv2.FILLED)                       # Dessiner un cercle en définissant sa position, son rayon et sa couleur (cv2.FILLED = forme pleinne)
+                if draw_positions:                                                                                          # Si on souhaite marquer des positions
+                    if landmark_number:
+                        if id == landmark_number:                                                                           # Si une position particulière a été indiquée, marquer cette position à l'écran
+                            cv2.circle(camera_image, (position_x, position_y), 25, (255, 0, 255), cv2.FILLED)               # Dessiner un cercle en définissant sa position, son rayon et sa couleur (cv2.FILLED = forme pleinne)
+                    else:
+                        cv2.circle(camera_image, (position_x, position_y), 25, (255, 0, 255), cv2.FILLED)                   # Sinon, marquer toutes les positions
         return landmarks_list

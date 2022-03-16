@@ -11,9 +11,9 @@ def main():
     while True:
         success_camera_access, camera_image = camera.read()                                                                 # Récupérer l'image de la caméra
         camera_image = detector.find_faces(camera_image, draw_landmarks=True)                                               # Détecter le visage et dessiner la représentation
-        landmarks_list = detector.find_position(camera_image, draw_positions=False)                                         # Récupérer les positions des différents repères d'un visage et les afficher
-        # if len(landmarks_list) != 0:
-            # print(landmarks_list[8])                                                                                      # Afficher les coordonnées du point de repère 8
+        landmarks_list = detector.find_position(camera_image, draw_positions=True, landmark_number=8)                       # Récupérer les positions des différents repères d'un visage et les afficher (où une seule en particulier)
+        if len(landmarks_list) != 0:
+            print(landmarks_list[8])                                                                                        # Afficher les coordonnées du point de repère 8
         camera_image = cv2.flip(camera_image, 1)                                                                            # Retourner l'image (car effet mirroir)
         courant_time = time.time()                                                                                          # Gérer les FPS
         fps = 1 / (courant_time - previous_time)
