@@ -1,0 +1,5 @@
+.idea/
+Notes
+faces_tracking/__pycache__/
+hands_tracking/__pycache__/
+venv
